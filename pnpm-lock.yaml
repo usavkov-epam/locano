@@ -8,10 +8,10 @@ importers:
 
   .:
     devDependencies:
-      '@workspace/eslint-config':
+      '@locano/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
-      '@workspace/typescript-config':
+      '@locano/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
       prettier:
@@ -26,7 +26,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@workspace/ui':
+      '@locano/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       lucide-react:
@@ -45,6 +45,12 @@ importers:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
     devDependencies:
+      '@locano/eslint-config':
+        specifier: workspace:^
+        version: link:../../packages/eslint-config
+      '@locano/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^20
         version: 20.17.19
@@ -54,12 +60,6 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.0.4(@types/react@19.0.10)
-      '@workspace/eslint-config':
-        specifier: workspace:^
-        version: link:../../packages/eslint-config
-      '@workspace/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
@@ -138,6 +138,12 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
     devDependencies:
+      '@locano/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@locano/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@tailwindcss/postcss':
         specifier: ^4.0.8
         version: 4.0.8
@@ -153,12 +159,6 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.0.4(@types/react@19.0.10)
-      '@workspace/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@workspace/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
       tailwindcss:
         specifier: ^4.0.8
         version: 4.0.8

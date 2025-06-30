@@ -1,3 +1,3 @@
-# `@workspace/typescript-config`
+# `@locano/typescript-config`
 
 Shared typescript configuration for the workspace.
