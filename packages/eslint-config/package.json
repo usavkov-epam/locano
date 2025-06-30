@@ -5,7 +5,9 @@
   "private": true,
   "exports": {
     "./base": "./base.js",
+    "./nest-js": "./nest.js",
     "./next-js": "./next.js",
+    "./prettier": "./prettier-base.js",
     "./react-internal": "./react-internal.js"
   },
   "devDependencies": {
