@@ -1,4 +1,4 @@
-import { LoginForm } from "@locano/ui/components";
+import { LoginForm } from "@/components/forms";
 
 export default function Page() {
   return (
