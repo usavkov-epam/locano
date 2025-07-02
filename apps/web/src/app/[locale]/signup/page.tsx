@@ -1,4 +1,4 @@
-import { LocaleSwitcher } from "@/components";
+import { LocaleSwitcher } from '@/components';
 
 export default function SignupPage() {
   return (

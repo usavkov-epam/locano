@@ -1,17 +1,17 @@
 'use client';
 
-import { useTranslations } from "next-intl"
-import { z } from "zod";
+import { useTranslations } from 'next-intl';
+import { z } from 'zod';
 
-import { cn } from "@locano/ui/lib/utils"
+import { cn } from '@locano/ui/lib/utils';
 import {
   FormField,
   ReactHookForm,
-} from "@locano/ui/components/form"
-import { loginSchema } from "@locano/ui/schemas";
-import { Button } from "@locano/ui/components/button"
-import { Input } from "@locano/ui/components/input"
-import { Label } from "@locano/ui/components/label"
+} from '@locano/ui/components/form';
+import { loginSchema } from '@locano/ui/schemas';
+import { Button } from '@locano/ui/components/button';
+import { Input } from '@locano/ui/components/input';
+import { Label } from '@locano/ui/components/label';
 
 const defaultValues: z.infer<typeof loginSchema> = {
   login: '',
@@ -21,13 +21,13 @@ const defaultValues: z.infer<typeof loginSchema> = {
 export function LoginForm({
   className,
   ...props
-}: React.ComponentProps<"form">) {
+}: React.ComponentProps<'form'>) {
   const translate = useTranslations('form.login');
 
   return (
     <ReactHookForm
       onSubmit={(data) => console.log(data)}
-      className={cn("flex flex-col gap-6", className)}
+      className={cn('flex flex-col gap-6', className)}
       options={{ defaultValues }}
       schema={loginSchema}
       {...props}
@@ -92,11 +92,11 @@ export function LoginForm({
         </Button>
       </div>
       <div className="text-center text-sm">
-        {translate('noAccount')}{" "}
+        {translate('noAccount')}{' '}
         <a href="#" className="underline underline-offset-4">
           {translate('actions.signUp')}
         </a>
       </div>
     </ReactHookForm>
-  )
+  );
 }

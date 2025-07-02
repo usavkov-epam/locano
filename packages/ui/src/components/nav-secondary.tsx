@@ -1,5 +1,5 @@
-import * as React from "react"
-import { type LucideIcon } from "lucide-react"
+import * as React from 'react';
+import { type LucideIcon } from 'lucide-react';
 
 import {
   SidebarGroup,
@@ -7,7 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@locano/ui/components/sidebar"
+} from '@locano/ui/components/sidebar';
 
 export function NavSecondary({
   items,
@@ -36,5 +36,5 @@ export function NavSecondary({
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  )
+  );
 }

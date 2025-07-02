@@ -1,27 +1,27 @@
 import {
   Geist,
   Geist_Mono,
-} from "next/font/google"
+} from 'next/font/google';
 import { notFound } from 'next/navigation';
 import {
   hasLocale,
   NextIntlClientProvider,
 } from 'next-intl';
 
-import { NextThemesProvider } from "@/components"
+import { NextThemesProvider } from '@/components';
 import { routing } from '@/i18n/routing';
 
-import "@locano/ui/globals.css"
+import '@locano/ui/globals.css';
 
 const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
 
 const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
+  subsets: ['latin'],
+  variable: '--font-mono',
+});
 
 export default async function LocaleLayout({
   children,
@@ -49,5 +49,5 @@ export default async function LocaleLayout({
         </NextThemesProvider>
       </body>
     </html>
-  )
+  );
 }

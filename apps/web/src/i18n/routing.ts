@@ -1,4 +1,4 @@
-import {defineRouting} from 'next-intl/routing';
+import { defineRouting } from 'next-intl/routing';
 
 import { LOCALES } from './constants';
  

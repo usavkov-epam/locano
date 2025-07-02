@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   BadgeCheck,
@@ -7,13 +7,13 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
-} from "lucide-react"
+} from 'lucide-react';
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@locano/ui/components/avatar"
+} from '@locano/ui/components/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,13 +22,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@locano/ui/components/dropdown-menu"
+} from '@locano/ui/components/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@locano/ui/components/sidebar"
+} from '@locano/ui/components/sidebar';
 
 export function NavUser({
   user,
@@ -39,7 +39,7 @@ export function NavUser({
     avatar: string
   }
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
 
   return (
     <SidebarMenu>
@@ -63,7 +63,7 @@ export function NavUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
@@ -110,5 +110,5 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

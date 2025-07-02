@@ -22,13 +22,13 @@ export const LocaleSelect: React.FC<LocaleSelectProps> = ({
 }) => {
   const sortedLocales = useMemo(() => {
     return locales.toSorted((a, b) => a.label.localeCompare(b.label));
-  }, [locales, locale]);
+  }, [locales]);
 
   const preferredLocales = useMemo(() => {
-    console.log(sortedLocales)
+    console.log(sortedLocales);
     return sortedLocales
       .filter(({ value }) => ['en', 'ru'].includes(value));
-  }, [locales]);
+  }, [sortedLocales]);
 
   console.log('locale', locale);
 
@@ -66,4 +66,4 @@ export const LocaleSelect: React.FC<LocaleSelectProps> = ({
       </SelectContent>
     </Select>
   );
-}
+};

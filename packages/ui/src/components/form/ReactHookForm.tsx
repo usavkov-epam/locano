@@ -1,18 +1,19 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PropsWithChildren } from "react";
+import { PropsWithChildren } from 'react';
 import {
   useForm,
   FormProvider,
   type UseFormProps,
   type FieldValues,
+  SubmitHandler,
 } from 'react-hook-form';
-import { ZodSchema } from "zod";
+import { ZodSchema } from 'zod';
 
 type ReactHookFormProps<T extends FieldValues> = {
   className?: string;
-  onSubmit: (data: any) => void;
+  onSubmit: SubmitHandler<T>;
   options?: UseFormProps<T>;
   schema?: ZodSchema<T>;
 } & PropsWithChildren;

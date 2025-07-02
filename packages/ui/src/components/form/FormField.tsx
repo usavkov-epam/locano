@@ -10,7 +10,7 @@ type FormFieldProps = {
   name: string;
   label?: string;
   component: ComponentType<any>;
-} & Record<string, any>;
+};
 
 export function FormField({
   name,

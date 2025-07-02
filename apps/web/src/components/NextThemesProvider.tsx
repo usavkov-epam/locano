@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import { ThemeProvider } from "next-themes"
+import { ThemeProvider } from 'next-themes';
 
 export function NextThemesProvider({ children }: { children: React.ReactNode }) {
   return (
@@ -13,5 +13,5 @@ export function NextThemesProvider({ children }: { children: React.ReactNode }) 
     >
       {children}
     </ThemeProvider>
-  )
+  );
 }
