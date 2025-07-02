@@ -22,5 +22,14 @@
         "apple": "Apple"
       }
     }
+  },
+  "localeSwitcher": {
+    "title": "Select your language",
+    "description": "Choose your preferred language for the application",
+    "action": "Change Language",
+    "locale": {
+      "en": "English",
+      "ru": "Русский"
+    }
   }
 }
