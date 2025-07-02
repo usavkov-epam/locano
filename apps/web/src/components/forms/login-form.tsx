@@ -14,6 +14,7 @@ import { Input } from '@locano/ui/components/input';
 import { Label } from '@locano/ui/components/label';
 import { cn } from '@locano/ui/lib/utils';
 import { loginSchema } from '@locano/ui/schemas';
+import { LocaleSwitcher } from '../LocaleSwitcher';
 
 type FormData  = z.infer<typeof loginSchema>;
 
@@ -26,7 +27,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'form'>) {
-  const translate = useTranslations('form.login');
+  const translate = useTranslations('form.signIn');
 
   const onSubmitValid = useCallback<SubmitHandler<FormData>>((data) => {
       console.log('Form submitted with data:', data);
@@ -35,6 +36,7 @@ export function LoginForm({
 
   return (
     <ReactHookForm<FormData>
+      formId="signIn"
       onSubmitValid={onSubmitValid}
       className={cn('flex flex-col gap-6', className)}
       options={{ defaultValues }}
@@ -42,6 +44,7 @@ export function LoginForm({
       {...props}
     >
       <div className="flex flex-col items-center gap-2 text-center">
+        <LocaleSwitcher />
         <h1 className="text-2xl font-bold">{translate('title')}</h1>
         <p className="text-muted-foreground text-sm text-balance">
           {translate('description')}
@@ -49,7 +52,7 @@ export function LoginForm({
       </div>
       <div className="grid gap-6">
         <div className="grid gap-3">
-          <Label htmlFor="email">{translate('field.email')}</Label>
+          <Label htmlFor="email">{translate('field.login.label')}</Label>
           <FormField
             id="login"
             name="login"
@@ -60,7 +63,7 @@ export function LoginForm({
         </div>
         <div className="grid gap-3">
           <div className="flex items-center">
-            <Label htmlFor="password">{translate('field.password')}</Label>
+            <Label htmlFor="password">{translate('field.password.label')}</Label>
             <a
               href="#"
               className="ml-auto text-sm underline-offset-4 hover:underline"

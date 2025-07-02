@@ -28,7 +28,7 @@ export default async function LocaleLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
 
@@ -44,6 +44,7 @@ export default async function LocaleLayout({
       <body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}>
         <NextThemesProvider>
           <NextIntlClientProvider locale={locale}>
+            <div className="overlays" />
             {children}
           </NextIntlClientProvider>
         </NextThemesProvider>

@@ -31,8 +31,6 @@ export const LocaleSelect: React.FC<LocaleSelectProps> = ({
       .filter(({ value }) => ['en', 'ru'].includes(value));
   }, [sortedLocales]);
 
-  console.log('locale', locale);
-
   return (
     <Select
       onValueChange={onChange}
@@ -46,7 +44,7 @@ export const LocaleSelect: React.FC<LocaleSelectProps> = ({
           <SelectLabel>Preferred</SelectLabel>
           {preferredLocales.map(({ label, value }) => (
             <SelectItem
-              key={value}
+              key={`preferred-${value}`}
               value={value}
             >
               {label}
@@ -55,9 +53,9 @@ export const LocaleSelect: React.FC<LocaleSelectProps> = ({
         </SelectGroup>
         <SelectGroup>
           <SelectSeparator />
-          {locales.map(({ label, value }) => (
+          {sortedLocales.map(({ label, value }) => (
             <SelectItem
-              key={value}
+              key={`all-${value}`}
               value={value}
             >
               {label}

@@ -8,6 +8,7 @@ import {
 import {
   useCallback,
   useMemo,
+  useTransition,
 } from 'react';
 
 import { LocaleSelect } from '@locano/ui/components';
@@ -17,12 +18,14 @@ import {
   usePathname,
   useRouter,
 } from '@/i18n/navigation';
+import { LoadingOverlay } from './LoadingOverlay';
 
 export function LocaleSwitcher() {
   const t = useTranslations('localeSwitcher');
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
+  const [isPending, startTransition] = useTransition();
 
   const locales = useMemo(() => (
     LOCALES.map((loc) => ({
@@ -32,11 +35,14 @@ export function LocaleSwitcher() {
   ), [t]);
 
   const onChange = useCallback((value: string) => {
-    router.replace(pathname, { locale: value as Locale });
+    startTransition(() => {
+      router.replace(pathname, { locale: value as Locale });
+    });
   }, [pathname, router]);
 
   return (
     <div>
+      {isPending && isPending && <LoadingOverlay />}
       <LocaleSelect
         locale={locale}
         locales={locales}

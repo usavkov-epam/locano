@@ -1,36 +1,51 @@
 'use client';
 
-import type { ComponentType } from 'react';
+import { useTranslations } from 'next-intl';
+import { use, type ComponentType, type InputHTMLAttributes, type SelectHTMLAttributes } from 'react';
 import {
   Controller,
   useFormContext,
+  FieldValues,
+  Path,
 } from 'react-hook-form';
 
-type FormFieldProps = {
-  name: string;
-  label?: string;
-  component: ComponentType<any>;
-};
+import { MetadataContext } from '@locano/ui/contexts';
 
-export function FormField({
+type FormFieldProps<TFieldValues extends FieldValues, TComponentProps extends object> = {
+  name: Path<TFieldValues>;
+  label?: string;
+  component: ComponentType<TComponentProps>;
+} & Omit<TComponentProps, keyof InputHTMLAttributes<HTMLInputElement> | keyof SelectHTMLAttributes<HTMLSelectElement>>;
+
+export function FormField<TFieldValues extends FieldValues>({
   name,
   label,
   component: Component,
   ...rest
-}: FormFieldProps) {
-  const { control } = useFormContext();
+}: FormFieldProps<TFieldValues, any>) {
+  const metadata = use(MetadataContext)
+  const t = useTranslations(`${metadata.formTranslationsPath}.field.${name}`);
+  const t2 = useTranslations();
+  console.log(t2('form.signIn.field.password.error.tooShort'))
+  const { control } = useFormContext<TFieldValues>();
 
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <Component
-          {...field}
-          {...rest}
-          label={label}
-          error={fieldState.error?.message}
-        />
+        <div>
+          {label && <label htmlFor={name}>{label}</label>}
+          <Component
+            {...field}
+            {...rest}
+            id={name}
+            error={fieldState.error?.message}
+          />
+          {fieldState.error && (
+            <span style={{ color: 'red' }}>{t(fieldState.error.message)}</span>
+          )}
+        </div>
       )}
     />
   );

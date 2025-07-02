@@ -1,3 +1,5 @@
+'use client';
+
 import { LoginForm } from '@/components/forms';
 
 export default function Page() {

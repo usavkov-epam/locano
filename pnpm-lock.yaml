@@ -252,9 +252,15 @@ importers:
       lucide-react:
         specifier: ^0.475.0
         version: 0.475.0(react@19.0.0)
+      next-intl:
+        specifier: ^4.3.1
+        version: 4.3.1(next@15.2.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(typescript@5.7.3)
       next-themes:
         specifier: ^0.4.4
         version: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      reflect-metadata:
+        specifier: ^0.2.0
+        version: 0.2.2
       tailwind-merge:
         specifier: ^3.0.1
         version: 3.0.1

@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import {
   type FieldValues,
   FormProvider,
@@ -12,8 +12,11 @@ import {
 } from 'react-hook-form';
 import * as z from 'zod/v4';
 
+import { MetadataContext } from '@locano/ui/contexts';
+
 type ReactHookFormProps<T extends FieldValues> = {
   className?: string;
+  formId: string;
   onSubmitValid: SubmitHandler<T>;
   onSubmitInvalid?: SubmitErrorHandler<T>;
   options?: UseFormProps<T>;
@@ -23,6 +26,7 @@ type ReactHookFormProps<T extends FieldValues> = {
 export function ReactHookForm<T extends FieldValues>({
   children,
   className,
+  formId,
   onSubmitValid,
   onSubmitInvalid,
   options,
@@ -33,14 +37,21 @@ export function ReactHookForm<T extends FieldValues>({
     ...options,
   });
 
+  const metadata = useMemo(() => ({
+    formId,
+    formTranslationsPath: `form.${formId}`,
+  }), [formId]);
+
   return (
     <FormProvider {...form}>
-      <form
-        className={className}
-        onSubmit={form.handleSubmit(onSubmitValid, onSubmitInvalid)}
-      >
-        {children}
-      </form>
+      <MetadataContext value={metadata}>
+        <form
+          className={className}
+          onSubmit={form.handleSubmit(onSubmitValid, onSubmitInvalid)}
+        >
+          {children}
+        </form>
+      </MetadataContext>
     </FormProvider>
   );
 }
