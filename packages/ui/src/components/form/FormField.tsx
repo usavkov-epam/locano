@@ -18,9 +18,7 @@ export function FormField({
   component: Component,
   ...rest
 }: FormFieldProps) {
-  const { control, formState } = useFormContext();
-
-  console.log('formState', formState);
+  const { control } = useFormContext();
 
   return (
     <Controller
