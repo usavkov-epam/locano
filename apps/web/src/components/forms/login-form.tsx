@@ -1,7 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { z } from 'zod';
+import { useCallback } from 'react';
+import { SubmitHandler } from 'react-hook-form';
+import * as z from 'zod/v4';
 
 import { Button } from '@locano/ui/components/button';
 import {
@@ -13,7 +15,9 @@ import { Label } from '@locano/ui/components/label';
 import { cn } from '@locano/ui/lib/utils';
 import { loginSchema } from '@locano/ui/schemas';
 
-const defaultValues: z.infer<typeof loginSchema> = {
+type FormData  = z.infer<typeof loginSchema>;
+
+const defaultValues: FormData  = {
   login: '',
   password: '',
 };
@@ -24,9 +28,14 @@ export function LoginForm({
 }: React.ComponentProps<'form'>) {
   const translate = useTranslations('form.login');
 
+  const onSubmitValid = useCallback<SubmitHandler<FormData>>((data) => {
+      console.log('Form submitted with data:', data);
+      // Handle form submission logic here, e.g., API call
+    }, []);
+
   return (
-    <ReactHookForm
-      onSubmit={(data) => console.log(data)}
+    <ReactHookForm<FormData>
+      onSubmitValid={onSubmitValid}
       className={cn('flex flex-col gap-6', className)}
       options={{ defaultValues }}
       schema={loginSchema}

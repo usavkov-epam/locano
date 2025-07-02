@@ -5,28 +5,31 @@ import { PropsWithChildren } from 'react';
 import {
   type FieldValues,
   FormProvider,
+  SubmitErrorHandler,
   SubmitHandler,
   useForm,
   type UseFormProps,
 } from 'react-hook-form';
-import { ZodSchema } from 'zod';
+import * as z from 'zod/v4';
 
 type ReactHookFormProps<T extends FieldValues> = {
   className?: string;
-  onSubmit: SubmitHandler<T>;
+  onSubmitValid: SubmitHandler<T>;
+  onSubmitInvalid?: SubmitErrorHandler<T>;
   options?: UseFormProps<T>;
-  schema?: ZodSchema<T>;
+  schema?: z.ZodType<T, T>;
 } & PropsWithChildren;
 
 export function ReactHookForm<T extends FieldValues>({
   children,
   className,
-  onSubmit,
+  onSubmitValid,
+  onSubmitInvalid,
   options,
   schema,
 }: ReactHookFormProps<T>) {
   const form = useForm<T>({
-    ...(schema ? { resolver: zodResolver(schema) } : {}),
+    resolver: schema ? zodResolver(schema) : undefined,
     ...options,
   });
 
@@ -34,10 +37,10 @@ export function ReactHookForm<T extends FieldValues>({
     <FormProvider {...form}>
       <form
         className={className}
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(onSubmitValid, onSubmitInvalid)}
       >
         {children}
       </form>
     </FormProvider>
   );
-};
+}
