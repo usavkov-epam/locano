@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import onlyWarn from 'eslint-plugin-only-warn';
+import pluginImportSort from 'eslint-plugin-simple-import-sort';
 import turboPlugin from 'eslint-plugin-turbo';
 import tseslint from 'typescript-eslint';
 
@@ -26,6 +27,31 @@ export default [
   {
     plugins: {
       onlyWarn,
+    },
+  },
+  {
+    plugins: {
+      'simple-import-sort': pluginImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': ['error', {
+        groups: [
+          // 1. NPM packages
+          ['^@?\\w'],
+
+          // 2. @locano/*
+          ['^@locano'],
+
+          // 3. @/ — aliases for src
+          ['^@/'],
+
+          // 4. local imports from far to near
+          ['^\\.\\./', '^\\./'],
+
+          // 5. style imports
+          ['^.+\\.s?css$'],
+        ],
+      }],
     },
   },
   {

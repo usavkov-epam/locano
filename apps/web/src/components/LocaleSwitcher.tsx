@@ -10,12 +10,13 @@ import {
   useMemo,
 } from 'react';
 
+import { LocaleSelect } from '@locano/ui/components';
+
 import { LOCALES } from '@/i18n/constants';
 import {
   usePathname,
   useRouter,
 } from '@/i18n/navigation';
-import { LocaleSelect } from '@locano/ui/components';
 
 export function LocaleSwitcher() {
   const t = useTranslations('localeSwitcher');

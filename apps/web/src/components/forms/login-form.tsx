@@ -3,15 +3,15 @@
 import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
-import { cn } from '@locano/ui/lib/utils';
+import { Button } from '@locano/ui/components/button';
 import {
   FormField,
   ReactHookForm,
 } from '@locano/ui/components/form';
-import { loginSchema } from '@locano/ui/schemas';
-import { Button } from '@locano/ui/components/button';
 import { Input } from '@locano/ui/components/input';
 import { Label } from '@locano/ui/components/label';
+import { cn } from '@locano/ui/lib/utils';
+import { loginSchema } from '@locano/ui/schemas';
 
 const defaultValues: z.infer<typeof loginSchema> = {
   login: '',

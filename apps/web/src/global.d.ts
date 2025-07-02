@@ -1,5 +1,5 @@
-import { routing } from '@/i18n/routing';
 import { formats } from '@/i18n/request';
+import { routing } from '@/i18n/routing';
 
 import messages from '../translations/en.json';
  

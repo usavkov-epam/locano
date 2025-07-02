@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { cn } from '@locano/ui/lib/utils';
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
