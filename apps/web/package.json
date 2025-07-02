@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
     "@locano/ui": "workspace:*",
     "lucide-react": "^0.475.0",
     "next": "^15.2.3",
@@ -19,7 +20,8 @@
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.59.0"
+    "react-hook-form": "^7.59.0",
+    "zod": "^3.25.0"
   },
   "devDependencies": {
     "@locano/eslint-config": "workspace:^",

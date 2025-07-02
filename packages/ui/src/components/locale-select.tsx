@@ -7,7 +7,6 @@ import {
   SelectLabel,
   SelectSeparator,
   SelectTrigger,
-  SelectValue,
 } from './select';
 
 interface LocaleSelectProps {

@@ -32,7 +32,7 @@ export function LocaleSwitcher() {
 
   const onChange = useCallback((value: string) => {
     router.replace(pathname, { locale: value as Locale });
-  }, []);
+  }, [pathname, router]);
 
   return (
     <div>
