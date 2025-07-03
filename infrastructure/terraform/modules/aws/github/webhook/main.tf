@@ -10,15 +10,6 @@ resource "aws_iam_role" "lambda_exec" {
           Service = "lambda.amazonaws.com"
         },
         Action = "sts:AssumeRole"
-      },
-      {
-        Effect = "Allow",
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
-        ],
-        Resource = "*"
       }
     ]
   })
@@ -98,10 +89,4 @@ resource "aws_lambda_permission" "apigateway_permission" {
   function_name = aws_lambda_function.webhook_handler.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${var.aws_region}:${var.aws_account_id}:${var.api_id}/*/*"
-}
-
-# CloudWatch log group for Lambda
-resource "aws_cloudwatch_log_group" "lambda_logs" {
-  name              = "/aws/lambda/${aws_lambda_function.webhook_handler.function_name}"
-  retention_in_days = 7
 }

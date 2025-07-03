@@ -42,8 +42,3 @@ output "github_webhook_aws_lambda_function_arn" {
   description = "GitHub Webhook Lambda function ARN"
   value       = module.github_webhook.lambda_arn
 }
-
-output "github_webhook_aws_lambda_source_code_hash" {
-  description = "GitHub Webhook Lambda function source code hash"
-  value       = module.github_webhook.lambda_source_code_hash
-}

@@ -3,13 +3,6 @@ module "dynamodb" {
   table_name = var.dynamodb_table_name
 }
 
-# module "apprunner" {
-#   source        = "./modules/aws/apprunner"
-#   service_name  = var.apprunner_service_name
-#   ecr_repo_name = var.ecr_repo_name
-#   service_port  = "3000"
-# }
-
 module "ssm" {
   source          = "./modules/aws/ssm"
   parameter_name  = var.ssm_api_key_name

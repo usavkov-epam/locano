@@ -3,11 +3,15 @@ resource "aws_iam_role" "lambda_exec" {
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
-    Statement = [{
-      Effect = "Allow",
-      Principal = { Service = "lambda.amazonaws.com" },
-      Action = "sts:AssumeRole"
-    }]
+    Statement = [
+      {
+        Effect = "Allow",
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        },
+        Action = "sts:AssumeRole"
+      },
+    ]
   })
 }
 
@@ -19,8 +23,8 @@ resource "aws_iam_role_policy" "sqs_consume" {
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "sqs:ReceiveMessage",
           "sqs:DeleteMessage",
           "sqs:GetQueueAttributes"
@@ -43,8 +47,8 @@ resource "aws_lambda_function" "webhook_consumer" {
   runtime       = var.lambda_runtime
   handler       = var.lambda_handler
 
-  s3_bucket = var.s3_bucket
-  s3_key    = var.lambda_output_path
+  s3_bucket        = var.s3_bucket
+  s3_key           = var.lambda_output_path
   source_code_hash = data.aws_s3_object.lambda_zip.etag
 
   environment {
@@ -58,10 +62,4 @@ resource "aws_lambda_event_source_mapping" "sqs_trigger" {
   event_source_arn = var.sqs_queue_arn
   function_name    = aws_lambda_function.webhook_consumer.arn
   batch_size       = 1
-}
-
-# CloudWatch log group for Lambda
-resource "aws_cloudwatch_log_group" "lambda_logs" {
-  name              = "/aws/lambda/${aws_lambda_function.webhook_handler.function_name}"
-  retention_in_days = 7
 }
