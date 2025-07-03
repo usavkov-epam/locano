@@ -23,3 +23,22 @@ module "cognito" {
   region                = var.aws_region
   password_policy       = var.password_policy
 }
+
+module "apigateway" {
+  source = "./modules/aws/api-gateway"
+  name   = var.api_gateway_name
+}
+
+module "github_webhook" {
+  source = "./modules/aws/github/webhook"
+  api_id = module.apigateway.api_id
+  lambda_source_path = "../../apps/api/lambdas/github-webhook"
+  lambda_function_name = var.gh_webhook_lambda_function_name
+  lambda_handler = var.gh_webhook_lambda_handler
+  lambda_runtime = var.gh_webhook_lambda_runtime
+  route_key = var.gh_webhook_route_key
+  depends_on = [ module.apigateway ]
+
+  lambda_dir = "${path.module}/lambdas"
+  lambda_output_path    = "github_webhook.lambda.zip"
+}

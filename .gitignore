@@ -36,3 +36,6 @@ npm-debug.log*
 *.pem
 
 .vscode
+
+.terraform
+infrastructure/terraform/lambdas
