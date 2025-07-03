@@ -14,6 +14,7 @@ import { Input } from '@locano/ui/components/input';
 import { Label } from '@locano/ui/components/label';
 import { cn } from '@locano/ui/lib/utils';
 import { loginSchema } from '@locano/ui/schemas';
+
 import { LocaleSwitcher } from '../LocaleSwitcher';
 
 type FormData  = z.infer<typeof loginSchema>;

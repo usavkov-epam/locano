@@ -18,6 +18,7 @@ import {
   usePathname,
   useRouter,
 } from '@/i18n/navigation';
+
 import { LoadingOverlay } from './LoadingOverlay';
 
 export function LocaleSwitcher() {

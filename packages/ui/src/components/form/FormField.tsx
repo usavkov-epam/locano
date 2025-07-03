@@ -1,12 +1,12 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { use, type ComponentType, type InputHTMLAttributes, type SelectHTMLAttributes } from 'react';
+import { type ComponentType, type InputHTMLAttributes, type SelectHTMLAttributes,use } from 'react';
 import {
   Controller,
-  useFormContext,
   FieldValues,
   Path,
+  useFormContext,
 } from 'react-hook-form';
 
 import { MetadataContext } from '@locano/ui/contexts';
@@ -23,10 +23,10 @@ export function FormField<TFieldValues extends FieldValues>({
   component: Component,
   ...rest
 }: FormFieldProps<TFieldValues, any>) {
-  const metadata = use(MetadataContext)
+  const metadata = use(MetadataContext);
   const t = useTranslations(`${metadata.formTranslationsPath}.field.${name}`);
   const t2 = useTranslations();
-  console.log(t2('form.signIn.field.password.error.tooShort'))
+  console.log(t2('form.signIn.field.password.error.tooShort'));
   const { control } = useFormContext<TFieldValues>();
 
   return (
