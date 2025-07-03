@@ -31,14 +31,18 @@ module "apigateway" {
 
 module "github_webhook" {
   source = "./modules/aws/github/webhook"
+
+  aws_region = var.aws_region
+  aws_account_id = var.aws_account_id
   api_id = module.apigateway.api_id
-  lambda_source_path = "../../apps/api/lambdas/github-webhook"
+
   lambda_function_name = var.gh_webhook_lambda_function_name
   lambda_handler = var.gh_webhook_lambda_handler
   lambda_runtime = var.gh_webhook_lambda_runtime
-  route_key = var.gh_webhook_route_key
-  depends_on = [ module.apigateway ]
+  lambda_output_path    = "github-webhook.lambda.zip"
 
-  lambda_dir = "${path.module}/lambdas"
-  lambda_output_path    = "github_webhook.lambda.zip"
+  route_key = var.gh_webhook_route_key
+  s3_bucket = var.lambdas_s3_bucket
+
+  depends_on = [ module.apigateway ]
 }

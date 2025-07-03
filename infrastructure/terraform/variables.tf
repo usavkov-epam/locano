@@ -1,3 +1,8 @@
+
+variable "aws_account_id" {
+  description = "AWS account ID"
+  type        = string
+}
 variable "aws_region" {
   description = "AWS region"
   type        = string
@@ -62,4 +67,8 @@ variable "gh_webhook_route_key" {
   description = "Route key for the GitHub Webhook API Gateway route"
   type    = string
   default = "POST /github/webhook"
+}
+variable "lambdas_s3_bucket" {
+  description = "S3 bucket for Lambda ZIP files"
+  type        = string
 }
