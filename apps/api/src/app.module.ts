@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { WebhooksModule } from './webhooks/webhooks.module';
+import { GithubModule } from './github/github.module';
 
 @Module({
-  imports: [WebhooksModule],
+  imports: [GithubModule, ConfigModule.forRoot({
+      expandVariables: true,
+    })],
   controllers: [AppController],
   providers: [AppService],
 })

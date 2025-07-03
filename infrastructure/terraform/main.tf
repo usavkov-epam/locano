@@ -29,6 +29,12 @@ module "apigateway" {
   name   = var.api_gateway_name
 }
 
+module "github_queue" {
+  source = "./modules/aws/github/queue"
+
+  sqs_queue_name = var.gh_queue_name
+}
+
 module "github_webhook" {
   source = "./modules/aws/github/webhook"
 
@@ -37,12 +43,28 @@ module "github_webhook" {
   api_id = module.apigateway.api_id
 
   lambda_function_name = var.gh_webhook_lambda_function_name
-  lambda_handler = var.gh_webhook_lambda_handler
-  lambda_runtime = var.gh_webhook_lambda_runtime
+  lambda_handler = var.aws_lambda_handler
+  lambda_runtime = var.aws_lambda_runtime
   lambda_output_path    = "github-webhook.lambda.zip"
 
   route_key = var.gh_webhook_route_key
   s3_bucket = var.lambdas_s3_bucket
+  sqs_queue_url = module.github_queue.queue_url
+  github_webhook_secret = var.github_webhook_secret
 
-  depends_on = [ module.apigateway ]
+  depends_on = [ module.apigateway, module.github_queue ]
+}
+
+module "github_consumer" {
+  source               = "./modules/aws/github/consumer"
+
+  lambda_function_name = var.gh_consumer_lambda_name
+  lambda_handler = var.aws_lambda_handler
+  lambda_runtime = var.aws_lambda_runtime
+  lambda_output_path = "github-sqs-consumer.lambda.zip"
+
+  sqs_queue_url            = module.github_queue.queue_url
+  sqs_queue_arn            = module.github_queue.queue_arn
+
+  s3_bucket = var.lambdas_s3_bucket
 }

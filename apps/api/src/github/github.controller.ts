@@ -2,7 +2,7 @@ import { Body,Controller, Headers, Post } from '@nestjs/common';
 
 import { GithubService } from './github.service';
 
-@Controller('webhooks/github')
+@Controller('github/webhook')
 export class GithubController {
   constructor(private readonly githubService: GithubService) {}
 

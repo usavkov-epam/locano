@@ -8,4 +8,4 @@ import { GithubService } from './github.service';
   controllers: [GithubController],
   providers: [GithubService],
 })
-export class WebhooksModule {}
+export class GithubModule {}

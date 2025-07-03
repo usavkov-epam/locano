@@ -6,6 +6,7 @@ variable "aws_region" {
 variable "aws_account_id" {
   description = "AWS account ID"
   type        = string
+  sensitive = true
 }
 
 variable "api_id" {
@@ -38,4 +39,15 @@ variable "lambda_output_path" {
 variable "s3_bucket" {
   description = "S3 bucket for Lambda ZIP files"
   type        = string
+}
+
+variable "sqs_queue_url" {
+  description = "URL of the SQS queue for GitHub webhook events"
+  type        = string
+}
+
+variable "github_webhook_secret" {
+  description = "GitHub webhook secret for validating incoming requests"
+  type        = string
+  sensitive   = true
 }

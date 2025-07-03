@@ -2,10 +2,12 @@
 
 set -euo pipefail
 
-# Source directory for Lambda functions
-BASE_LAMBDA_DIR="apps/api/src/lambdas"
+# Определяем директорию скрипта
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Source directory for Lambda functions (относительно скрипта)
+BASE_LAMBDA_DIR="$SCRIPT_DIR/../apps/api/src/lambdas"
 # Temporary local destination directory for ZIP files
-DIST_DIR="./scripts/.temp"
+DIST_DIR="$SCRIPT_DIR/.temp"
 # S3 prefix for Lambda ZIPs
 S3_PREFIX=""
 
@@ -18,6 +20,12 @@ fi
 # Check if AWS credentials are configured
 if ! aws sts get-caller-identity >/dev/null 2>&1; then
   echo "❌ Error: AWS credentials are not configured or invalid"
+  exit 1
+fi
+
+# Check if BASE_LAMBDA_DIR exists
+if [ ! -d "$BASE_LAMBDA_DIR" ]; then
+  echo "❌ Error: BASE_LAMBDA_DIR $BASE_LAMBDA_DIR does not exist"
   exit 1
 fi
 
@@ -34,57 +42,57 @@ for LAMBDA_PATH in $LAMBDAS; do
   NAME=$(basename "$LAMBDA_PATH")
   # Source index.ts file
   SRC_FILE="$LAMBDA_PATH/index.ts"
-  # Destination .js file in DIST_DIR (named as index.js)
-  JS_FILE="$DIST_DIR/$NAME/index.js"
-  # Output ZIP file
-  ZIPFILE="$NAME.lambda.zip"
+  # Destination .js file in the same directory
+  JS_FILE="$LAMBDA_PATH/index.js"
+  # Temporary ZIP file in the same directory
+  TEMP_ZIP="$LAMBDA_PATH/$NAME.lambda.zip"
+  # Final ZIP file in DIST_DIR
+  ZIPFILE="$DIST_DIR/$NAME.lambda.zip"
   # S3 destination path
   S3_DEST="s3://$LAMBDAS_S3_BUCKET/$S3_PREFIX$NAME.lambda.zip"
 
-  echo "🔧 [$NAME] Copying index.ts to temporary file for esbuild..."
+  echo "🔧 [$NAME] Checking $SRC_FILE"
   # Check if source index.ts exists
   if [ ! -f "$SRC_FILE" ]; then
     echo "❌ [$NAME] Entrypoint $SRC_FILE does not exist"
     continue
   fi
 
-  # Create a directory for the Lambda function in DIST_DIR
-  mkdir -p "$DIST_DIR/$NAME"
-
-  # Copy index.ts to DIST_DIR for esbuild processing
-  cp "$SRC_FILE" "$DIST_DIR/$NAME/index.ts" || {
-    echo "❌ [$NAME] Failed to copy $SRC_FILE to $DIST_DIR/index.ts"
-    continue
-    }
-
-  echo "🔧 [$NAME] Building with esbuild..."
-  # Run esbuild to bundle TypeScript into index.js
-  pnpm dlx esbuild "$DIST_DIR/$NAME/index.ts" \
+  echo "🔧 [$NAME] Building with esbuild in $LAMBDA_PATH..."
+  # Run esbuild to bundle TypeScript into index.js in the same directory
+  pnpm dlx esbuild "$SRC_FILE" \
     --bundle \
     --platform=node \
     --target=node20 \
     --outfile="$JS_FILE" \
-    --log-level=debug
+    --log-level=debug || {
+      echo "❌ [$NAME] esbuild failed"
+      rm -f "$JS_FILE"  # Clean up partial file
+      continue
+    }
 
-  # Check if index.js exists before zipping
+  # Check if index.js exists after build
   if [ ! -f "$JS_FILE" ]; then
     echo "❌ [$NAME] Compiled file $JS_FILE does not exist after esbuild"
-    rm -rf "$DIST_DIR/$NAME"
     continue
   fi
 
-  echo "📦 [$NAME] Creating ZIP archive $ZIPFILE..."
+  echo "📦 [$NAME] Creating ZIP archive $TEMP_ZIP..."
   # Debug: Check directory contents
-  echo "Debug: Contents of $DIST_DIR: $(ls -l $DIST_DIR)"
-
-  cd "$DIST_DIR/$NAME"
-  ls -l
-
+  echo "Debug: Contents of $LAMBDA_PATH: $(ls -l $LAMBDA_PATH)"
   # Create ZIP archive with index.js in root
-  (zip -j "$ZIPFILE" index.js) || {
+  (cd "$LAMBDA_PATH" && zip -j "$TEMP_ZIP" index.js) || {
     echo "❌ [$NAME] ZIP creation failed. Error details: $?"
-    # rm -f "$JS_FILE"
-    exit 1
+    ls -l "$LAMBDA_PATH"  # Additional debug info
+    rm -f "$JS_FILE" "$TEMP_ZIP"
+    continue
+  }
+
+  echo "🔧 [$NAME] Moving $TEMP_ZIP to $ZIPFILE..."
+  mv "$TEMP_ZIP" "$ZIPFILE" || {
+    echo "❌ [$NAME] Failed to move ZIP file"
+    rm -f "$JS_FILE" "$TEMP_ZIP"
+    continue
   }
 
   echo "📤 [$NAME] Uploading $ZIPFILE to $S3_DEST..."
@@ -97,10 +105,15 @@ for LAMBDA_PATH in $LAMBDAS; do
     continue
   }
 
-  echo "🗑️ [$NAME] Removing temporary files $JS_FILE, and $ZIPFILE..."
-  # Clean up temporary files
-  rm -f "$JS_FILE" "$ZIPFILE"
+  echo "🗑️ [$NAME] Removing temporary files..."
+  # Clean up temporary files including index.js in the source directory
+  rm -f "$JS_FILE"
+
+  echo "______________________________"
+  echo ""
 done
+
+rm -rf "$DIST_DIR"  # Clean up the temporary directory
 
 echo "✅ All Lambda functions built and uploaded to s3://$LAMBDAS_S3_BUCKET/$S3_PREFIX:"
 aws s3 ls "s3://$LAMBDAS_S3_BUCKET/$S3_PREFIX"
