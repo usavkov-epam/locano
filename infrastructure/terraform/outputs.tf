@@ -1,7 +1,12 @@
 # AWS DynamoDB
-output "aws_dynamodb_table_name" {
-  description = "DynamoDB table name"
-  value       = module.dynamodb.table_name
+output "aws_configs_dynamodb_table_name" {
+  description = "DynamoDB table name for configs"
+  value       = module.configs_dynamodb.table_name
+}
+output "aws_transactions_dynamodb_table_name" {
+  description = "DynamoDB table name for transactions"
+  value       = module.translations_dynamodb.table_name
+  
 }
 
 # AWS Cognito

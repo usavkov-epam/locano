@@ -43,7 +43,7 @@ module "github_webhook" {
   lambda_output_path   = "github-webhook.lambda.zip"
 
   route_key             = var.gh_webhook_route_key
-  s3_bucket             = module.s3.lambdas_bucket_name
+  s3_bucket             = module.lambdas_storage.s3_bucket_name
   sqs_queue_arn         = module.github_queue.queue_arn
   sqs_queue_url         = module.github_queue.queue_url
   github_webhook_secret = var.github_webhook_secret
@@ -71,12 +71,12 @@ module "github_consumer" {
   sqs_queue_url = module.github_queue.queue_url
   sqs_queue_arn = module.github_queue.queue_arn
 
-  s3_bucket = module.s3.lambdas_bucket_name
+  s3_bucket = module.lambdas_storage.s3_bucket_name
 
   depends_on = [
-    module.dynamodb,
     module.github_queue,
     module.lambdas_storage,
+    module.translations_dynamodb,
   ]
 }
 
