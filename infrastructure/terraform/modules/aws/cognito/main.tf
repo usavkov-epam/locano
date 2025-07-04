@@ -16,10 +16,10 @@ resource "aws_cognito_user_pool" "locano_user_pool" {
   }
 
   schema {
-    name = "email"
+    name                = "email"
     attribute_data_type = "String"
-    required = true
-    mutable = false
+    required            = true
+    mutable             = false
   }
 }
 
@@ -32,7 +32,7 @@ resource "aws_cognito_user_pool_client" "locano_user_pool_client" {
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_CUSTOM_AUTH"
   ]
-  prevent_user_existence_errors = "ENABLED"
-  generate_secret = false
+  prevent_user_existence_errors        = "ENABLED"
+  generate_secret                      = false
   allowed_oauth_flows_user_pool_client = false
 }

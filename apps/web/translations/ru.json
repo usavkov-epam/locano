@@ -1,0 +1,48 @@
+{
+  "form": {
+    "signIn": {
+      "title": "Login to your account",
+      "description": "Enter your email below to login to your account",
+      "orContinueWith": "Or continue with",
+      "noAccount": "Don't have an account?",
+      "loginWith": "Login with",
+      "field": {
+        "login": {
+          "label": "Email",
+          "placeholder": "Enter your email",
+          "error": {
+            "required": "Email is required",
+            "invalid": "Некорректный введён login"
+          }
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password",
+          "error": {
+            "tooShort": "Password must be at least 6 characters"
+          }
+        }
+      },
+      "actions": {
+        "login": "Login",
+        "forgotPassword": "Forgot password?",
+        "noAccount": "Don't have an account?",
+        "signUp": "Sign up"
+      },
+      "identityProvider": {
+        "google": "Google",
+        "github": "GitHub",
+        "apple": "Apple"
+      }
+    }
+  },
+  "localeSwitcher": {
+    "title": "Select your language",
+    "description": "Choose your preferred language for the application",
+    "action": "Change Language",
+    "locale": {
+      "en": "English",
+      "ru": "Русский"
+    }
+  }
+}

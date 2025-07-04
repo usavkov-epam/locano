@@ -6,6 +6,6 @@
       "@locano/ui/*": ["./src/*"]
     }
   },
-  "include": ["."],
+  "include": [".", "../../apps/web/src/components/forms/login-form.tsx"],
   "exclude": ["node_modules", "dist"]
 }
