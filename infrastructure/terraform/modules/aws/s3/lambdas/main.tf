@@ -21,5 +21,12 @@ data "aws_iam_policy_document" "lambdas" {
       aws_s3_bucket.lambdas_bucket.arn,
       "${aws_s3_bucket.lambdas_bucket.arn}/*",
     ]
+
+    principals {
+      type        = "AWS"
+      identifiers = aws_caller_identity.current.arn
+    }
   }
 }
+
+data "aws_caller_identity" "current" {}
