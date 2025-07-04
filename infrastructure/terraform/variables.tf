@@ -4,10 +4,6 @@ variable "aws_region" {
   type        = string
 }
 
-variable "lambdas_s3_bucket" {
-  description = "S3 bucket for Lambda ZIP files"
-  type        = string
-}
 variable "aws_lambda_runtime" {
   description = "Runtime for the GitHub Webhook Lambda function"
   type        = string
