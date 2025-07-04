@@ -1,3 +1,4 @@
+# IAM role for Lambda execution 
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.lambda_function_name}-role"
 
@@ -15,6 +16,13 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
+# Attach basic execution policy to Lambda role
+resource "aws_iam_role_policy_attachment" "lambda_basic" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# Attach basic execution policy to Lambda role
 resource "aws_iam_role_policy" "sqs_consume" {
   name = "${var.lambda_function_name}-sqs-policy"
   role = aws_iam_role.lambda_exec.name
@@ -41,6 +49,7 @@ data "aws_s3_object" "lambda_zip" {
   key    = var.lambda_output_path
 }
 
+# Lambda function using S3 as source
 resource "aws_lambda_function" "webhook_consumer" {
   function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_exec.arn
@@ -53,7 +62,10 @@ resource "aws_lambda_function" "webhook_consumer" {
 
   environment {
     variables = {
-      SQS_QUEUE_URL = var.sqs_queue_url
+      DYNAMODB_TABLE         = var.dynamodb_table_name
+      GITHUB_APP_ID          = var.github_app_id
+      GITHUB_APP_PRIVATE_KEY = var.github_app_private_key
+      SQS_QUEUE_URL          = var.sqs_queue_url
     }
   }
 }

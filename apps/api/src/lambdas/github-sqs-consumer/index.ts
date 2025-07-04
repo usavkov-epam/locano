@@ -1,5 +1,5 @@
-import type { SQSEvent, SQSRecord } from 'aws-lambda';
 import type { PushEvent } from '@octokit/webhooks-types';
+import type { SQSEvent, SQSRecord } from 'aws-lambda';
 
 export const handler = async (event: SQSEvent) => {
   for (const record of event.Records) {
@@ -9,6 +9,7 @@ export const handler = async (event: SQSEvent) => {
 
       if (eventType !== 'push') {
         console.log(`Skipping event: ${eventType}`);
+
         continue;
       }
 

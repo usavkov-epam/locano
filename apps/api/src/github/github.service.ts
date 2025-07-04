@@ -13,7 +13,7 @@ export class GithubService {
         'content-type': 'application/json',
       },
       isBase64Encoded: false,
-    }
+    };
 
     return handler(apiGatewayEvent as unknown as APIGatewayEvent);
   }

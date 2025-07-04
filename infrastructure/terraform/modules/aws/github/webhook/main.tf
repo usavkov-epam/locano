@@ -1,6 +1,7 @@
 # IAM role for Lambda execution
 resource "aws_iam_role" "lambda_exec" {
   name = "${var.lambda_function_name}-exec"
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -21,14 +22,15 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# IAM policy for S3 access
-resource "aws_iam_role_policy" "lambda_s3_access" {
-  name = "${var.lambda_function_name}-s3-access"
+# Lambda execution role policies
+resource "aws_iam_role_policy" "lambda_access" {
+  name = "${var.lambda_function_name}-access"
   role = aws_iam_role.lambda_exec.id
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
+        Sid    = "AllowS3AccessToLambdasBucket",
         Effect = "Allow",
         Action = [
           "s3:GetObject"
@@ -36,6 +38,14 @@ resource "aws_iam_role_policy" "lambda_s3_access" {
         Resource = [
           "arn:aws:s3:::${var.s3_bucket}/*"
         ]
+      },
+      {
+        Sid    = "AllowSQSSendMessageToGitHubWebhookQueue",
+        Effect = "Allow",
+        Action = [
+          "sqs:SendMessage"
+        ],
+        Resource = var.sqs_queue_arn
       }
     ]
   })
@@ -60,8 +70,8 @@ resource "aws_lambda_function" "webhook_handler" {
 
   environment {
     variables = {
-      SQS_QUEUE_URL         = var.sqs_queue_url
       GITHUB_WEBHOOK_SECRET = var.github_webhook_secret
+      SQS_QUEUE_URL         = var.sqs_queue_url
     }
   }
 }
@@ -88,5 +98,7 @@ resource "aws_lambda_permission" "apigateway_permission" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.webhook_handler.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.aws_region}:${var.aws_account_id}:${var.api_id}/*/*"
+  source_arn    = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${var.api_id}/*/*"
 }
+
+data "aws_caller_identity" "current" {}

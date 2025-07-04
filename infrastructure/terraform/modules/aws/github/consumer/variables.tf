@@ -30,3 +30,19 @@ variable "s3_bucket" {
   description = "S3 bucket for Lambda ZIP files"
   type        = string
 }
+
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table to store GitHub webhook events"
+  type        = string
+}
+
+variable "github_app_id" {
+  description = "GitHub App ID for the webhook"
+  type        = string
+}
+
+variable "github_app_private_key" {
+  description = "GitHub App private key for authentication"
+  type        = string
+  sensitive   = true
+}

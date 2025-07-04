@@ -3,12 +3,6 @@ variable "aws_region" {
   type        = string
 }
 
-variable "aws_account_id" {
-  description = "AWS account ID"
-  type        = string
-  sensitive = true
-}
-
 variable "api_id" {
   description = "ID of the shared API Gateway"
   type        = string
@@ -20,15 +14,15 @@ variable "lambda_function_name" {
 }
 
 variable "lambda_handler" {
-  type    = string
+  type = string
 }
 
 variable "lambda_runtime" {
-  type    = string
+  type = string
 }
 
 variable "route_key" {
-  type    = string
+  type = string
 }
 
 variable "lambda_output_path" {
@@ -38,6 +32,11 @@ variable "lambda_output_path" {
 
 variable "s3_bucket" {
   description = "S3 bucket for Lambda ZIP files"
+  type        = string
+}
+
+variable "sqs_queue_arn" {
+  description = "ARN of the SQS queue for GitHub webhook events"
   type        = string
 }
 
