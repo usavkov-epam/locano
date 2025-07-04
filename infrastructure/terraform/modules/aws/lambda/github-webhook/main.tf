@@ -53,17 +53,15 @@ resource "aws_iam_role_policy" "lambda_access" {
 
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "${path.module}/../../../../../apps/api/src/github/github-webhook"
-  output_path = "${path.module}/../../../../../apps/api/src/github/github-webhook.lambda.zip"
+  source_dir  = "${path.module}/../../../../../apps/api/src/lambdas/github-webhook"
+  output_path = "${path.module}/dist/github-webhook.lambda.zip"
 }
 
 resource "aws_s3_object" "lambda" {
   bucket = var.s3_bucket
-
   key    = "github-webhook.lambda.zip"
   source = data.archive_file.lambda_zip.output_path
-
-  etag = filemd5(data.archive_file.lambda_zip.output_path)
+  etag = data.archive_file.lambda_zip.output_base64sha256
 }
 
 # Lambda function using S3 as source
