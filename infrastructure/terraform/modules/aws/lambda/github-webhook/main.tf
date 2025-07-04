@@ -61,7 +61,7 @@ resource "aws_s3_object" "lambda" {
   bucket = var.s3_bucket
   key    = "github-webhook.lambda.zip"
   source = data.archive_file.lambda_zip.output_path
-  etag = data.archive_file.lambda_zip.output_base64sha256
+  etag   = data.archive_file.lambda_zip.output_base64sha256
 }
 
 # Lambda function using S3 as source
