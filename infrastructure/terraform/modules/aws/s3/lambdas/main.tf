@@ -24,7 +24,9 @@ data "aws_iam_policy_document" "lambdas" {
 
     principals {
       type        = "AWS"
-      identifiers = aws_caller_identity.current.arn
+      identifiers = [
+        aws_caller_identity.current.arn,
+      ]
     }
   }
 }
