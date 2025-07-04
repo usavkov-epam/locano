@@ -19,14 +19,6 @@ variable "aws_lambda_handler" {
   default     = "index.handler"
 }
 
-/* DynamoDB */
-variable "dynamodb_table_name" {
-  description = "Name of the DynamoDB table"
-  type        = string
-}
-
-/* System management */
-/* ... */
 
 /* Cognito */
 variable "cognito_user_pool_name" {

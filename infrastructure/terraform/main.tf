@@ -1,6 +1,10 @@
-module "dynamodb" {
-  source     = "./modules/aws/dynamodb"
-  table_name = var.dynamodb_table_name
+module "configs_dynamodb" {
+  source     = "./modules/aws/dynamodb/configs"
+  table_name = var.dynamodb_table_name_configs
+}
+module "translations_dynamodb" {
+  source     = "./modules/aws/dynamodb/translations"
+  table_name = var.dynamodb_table_name_translations
 }
 
 module "cognito" {
@@ -16,14 +20,19 @@ module "apigateway" {
   name   = var.api_gateway_name
 }
 
+module "lambdas_storage" {
+  source      = "./modules/aws/s3/lambdas"
+  bucket_name = var.s3_bucket_name_lambdas
+}
+
 module "github_queue" {
-  source = "./modules/aws/github/queue"
+  source = "./modules/aws/sqs/github-webhook"
 
   sqs_queue_name = var.gh_queue_name
 }
 
 module "github_webhook" {
-  source = "./modules/aws/github/webhook"
+  source = "./modules/aws/lambda/github-webhook"
 
   aws_region = var.aws_region
   api_id     = module.apigateway.api_id
@@ -34,18 +43,22 @@ module "github_webhook" {
   lambda_output_path   = "github-webhook.lambda.zip"
 
   route_key             = var.gh_webhook_route_key
-  s3_bucket             = var.lambdas_s3_bucket
+  s3_bucket             = module.s3.lambdas_bucket_name
   sqs_queue_arn         = module.github_queue.queue_arn
   sqs_queue_url         = module.github_queue.queue_url
   github_webhook_secret = var.github_webhook_secret
 
-  depends_on = [module.apigateway, module.github_queue]
+  depends_on = [
+    module.apigateway,
+    module.github_queue,
+    module.lambdas_storage,
+  ]
 }
 
 module "github_consumer" {
-  source = "./modules/aws/github/consumer"
+  source = "./modules/aws/lambda/github-push-consumer"
 
-  dynamodb_table_name = module.dynamodb.table_name
+  dynamodb_table_name = module.translations_dynamodb.table_name
 
   github_app_id          = var.github_app_id
   github_app_private_key = var.github_app_private_key
@@ -58,7 +71,12 @@ module "github_consumer" {
   sqs_queue_url = module.github_queue.queue_url
   sqs_queue_arn = module.github_queue.queue_arn
 
-  s3_bucket = var.lambdas_s3_bucket
+  s3_bucket = module.s3.lambdas_bucket_name
 
-  depends_on = [module.dynamodb, module.github_queue]
+  depends_on = [
+    module.dynamodb,
+    module.github_queue,
+    module.lambdas_storage,
+  ]
 }
+

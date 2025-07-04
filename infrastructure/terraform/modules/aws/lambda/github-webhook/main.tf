@@ -51,10 +51,19 @@ resource "aws_iam_role_policy" "lambda_access" {
   })
 }
 
-# Data source to get S3 object metadata
-data "aws_s3_object" "lambda_zip" {
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = "${path.module}/../../../../../apps/api/src/github/github-webhook"
+  output_path = "${path.module}/../../../../../apps/api/src/github/github-webhook.lambda.zip"
+}
+
+resource "aws_s3_object" "lambda" {
   bucket = var.s3_bucket
-  key    = var.lambda_output_path
+
+  key    = "github-webhook.lambda.zip"
+  source = data.archive_file.lambda_zip.output_path
+
+  etag = filemd5(data.archive_file.lambda_zip.output_path)
 }
 
 # Lambda function using S3 as source
@@ -64,9 +73,8 @@ resource "aws_lambda_function" "webhook_handler" {
   runtime       = var.lambda_runtime
   handler       = var.lambda_handler
 
-  s3_bucket        = var.s3_bucket
-  s3_key           = var.lambda_output_path
-  source_code_hash = data.aws_s3_object.lambda_zip.etag
+  s3_bucket = aws_s3_object.lambda.bucket
+  s3_key    = aws_s3_object.lambda.key
 
   environment {
     variables = {
