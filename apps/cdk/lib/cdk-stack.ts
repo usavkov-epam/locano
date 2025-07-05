@@ -10,7 +10,7 @@ import * as cognito from "aws-cdk-lib/aws-cognito";
 import { Construct } from "constructs";
 import * as path from "path";
 
-export class CdkStack extends cdk.Stack {
+export class LocanoCdkStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -59,14 +59,21 @@ export class CdkStack extends cdk.Stack {
       {
         entry: path.resolve(
           __dirname,
-          "../../../apps/api/src/lambdas/github-webhook/index.ts"
+          "../../api/src/lambdas/github-webhook/index.ts"
         ),
         handler: "handler",
+        description: "Handles and filters GitHub Webhooks.",
         runtime: lambda.Runtime.NODEJS_LATEST,
         role: ghWebhookLambdaRole,
         environment: {
           QUEUE_URL: webhookQueue.queueUrl,
         },
+        bundling: {
+          externalModules: [
+            '@aws-sdk/*',
+            '@smithy/*'
+          ],
+        }
       }
     );
 
@@ -83,9 +90,10 @@ export class CdkStack extends cdk.Stack {
         ],
         entry: path.resolve(
           __dirname,
-          "../../../apps/api/src/lambdas/github-push-consumer/index.ts"
+          "../../api/src//lambdas/github-sqs-consumer/index.ts"
         ),
         handler: "handler",
+        description: "Handle \"push\" event from GitHub and update translations for locales.",
         runtime: lambda.Runtime.NODEJS_LATEST,
         role: ghPushEventLambdaRole,
         environment: {
@@ -94,6 +102,11 @@ export class CdkStack extends cdk.Stack {
           GITHUB_APP_CLIENT_ID: process.env.GITHUB_APP_CLIENT_ID!,
           GITHUB_APP_CLIENT_SECRET: process.env.GITHUB_APP_CLIENT_SECRET!,
         },
+        bundling: {
+          externalModules: [
+            '@aws-sdk/*'
+          ],
+        }
       }
     );
 
@@ -101,7 +114,7 @@ export class CdkStack extends cdk.Stack {
     const api = new apigateway.RestApi(this, "LocanoApiGateway", {
       restApiName: "Locano API",
       deployOptions: {
-        stageName: "$default",
+        stageName: "dev",
       },
     });
 

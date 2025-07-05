@@ -1,12 +1,13 @@
 {
-  "name": "@locano/infrastructure-cdk",
+  "name": "cdk",
   "version": "0.0.0",
   "bin": {
     "cdk": "bin/cdk.js"
   },
   "scripts": {
     "build": "tsc",
-    "deploy": "pnpm run build && cdk deploy"
+    "bootstrap": "cdk bootstrap",
+    "deploy": "cdk deploy"
   },
   "devDependencies": {
     "@locano/eslint-config": "workspace:*",
