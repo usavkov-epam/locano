@@ -2,7 +2,7 @@
   "form": {
     "signIn": {
       "title": "Login to your account",
-      "description": "Enter your email below to login to your account",
+      "description": "Enter your login below to sign in to your account",
       "orContinueWith": "Or continue with",
       "noAccount": "Don't have an account?",
       "loginWith": "Login with",
@@ -28,6 +28,40 @@
         "forgotPassword": "Forgot password?",
         "noAccount": "Don't have an account?",
         "signUp": "Sign up"
+      },
+      "identityProvider": {
+        "google": "Google",
+        "github": "GitHub",
+        "apple": "Apple"
+      }
+    },
+    "signUp": {
+      "title": "Create a new account",
+      "description": "Enter your email below to create a new account",
+      "orContinueWith": "Or continue with",
+      "haveAccount": "Already have an account?",
+      "signUpWith": "Sign up with",
+      "field": {
+        "login": {
+          "label": "Email",
+          "placeholder": "Enter your email",
+          "error": {
+            "required": "Email is required",
+            "invalid": "Invalid email address"
+          }
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter your password",
+          "error": {
+            "tooShort": "Password must be at least 6 characters"
+          }
+        }
+      },
+      "actions": {
+        "signUp": "Sign Up",
+        "haveAccount": "Already have an account?",
+        "signIn": "Sign in"
       },
       "identityProvider": {
         "google": "Google",

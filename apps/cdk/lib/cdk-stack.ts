@@ -67,7 +67,7 @@ export class LocanoCdkStack extends cdk.Stack {
         role: ghWebhookLambdaRole,
         environment: {
           GITHUB_WEBHOOK_SECRET: process.env.GITHUB_WEBHOOK_SECRET!,
-          QUEUE_URL: webhookQueue.queueUrl,
+          SQS_QUEUE_URL: webhookQueue.queueUrl,
         },
         bundling: {
           externalModules: [
@@ -98,7 +98,7 @@ export class LocanoCdkStack extends cdk.Stack {
         runtime: lambda.Runtime.NODEJS_LATEST,
         role: ghPushEventLambdaRole,
         environment: {
-          QUEUE_URL: webhookQueue.queueUrl,
+          SQS_QUEUE_URL: webhookQueue.queueUrl,
           GITHUB_WEBHOOK_SECRET: process.env.GITHUB_WEBHOOK_SECRET!,
           GITHUB_APP_CLIENT_ID: process.env.GITHUB_APP_CLIENT_ID!,
           GITHUB_APP_CLIENT_SECRET: process.env.GITHUB_APP_CLIENT_SECRET!,

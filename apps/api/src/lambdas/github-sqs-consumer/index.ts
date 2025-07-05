@@ -1,6 +1,8 @@
 import type { PushEvent } from '@octokit/webhooks-types';
 import type { SQSEvent, SQSRecord } from 'aws-lambda';
 
+const DEFAULT_LOCALE_FILE_PATH = 'apps/web/translations/en.json';
+
 export const handler = async (event: SQSEvent) => {
   for (const record of event.Records) {
     try {
@@ -18,6 +20,8 @@ export const handler = async (event: SQSEvent) => {
       console.log(`Processing push event to ${payload.ref} on repo ${payload.repository.full_name}`);
 
       await handlePushEvent(payload);
+
+      return payload;
     } catch (err) {
       console.error('Failed to process message:', err);
       throw err;

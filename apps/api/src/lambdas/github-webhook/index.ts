@@ -29,7 +29,7 @@ export const handler = async (event: APIGatewayEvent) => {
         MessageAttributes: {
           event: {
             DataType: 'String',
-            StringValue: event.headers['x-github-event'] || 'unknown',
+            StringValue: event.headers['x-github-event'] || event.headers['X-GitHub-Event'] || 'unknown',
           },
         },
       })
@@ -50,7 +50,7 @@ export const handler = async (event: APIGatewayEvent) => {
 };
 
 function verifySignature(event: APIGatewayEvent): boolean {
-  const signature = event.headers['x-hub-signature-256'];
+  const signature = event.headers['x-hub-signature-256'] || event.headers['X-Hub-Signature-256'];
   const secret = process.env.GITHUB_WEBHOOK_SECRET;
 
   if (!signature || !event.body || !secret) return false;

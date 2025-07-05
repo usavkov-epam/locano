@@ -17,4 +17,9 @@ export class GithubController {
 
     return { status: 'ignored', event };
   }
+
+  @Post('sqs')
+  async handleMessage(@Body() payload: any) {
+    return this.githubService.handleMessage(payload);
+  }
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { APIGatewayEvent } from 'aws-lambda';
 
-import { handler } from '../lambdas/github-webhook';
+import * as webhook from '../lambdas/github-webhook';
+import * as consumer from '../lambdas/github-sqs-consumer';
 
 @Injectable()
 export class GithubService {
@@ -15,6 +16,10 @@ export class GithubService {
       isBase64Encoded: false,
     };
 
-    return handler(apiGatewayEvent as unknown as APIGatewayEvent);
+    return webhook.handler(apiGatewayEvent as unknown as APIGatewayEvent);
+  }
+
+  async handleMessage(payload: any) {
+    return consumer.handler(payload);
   }
 }
