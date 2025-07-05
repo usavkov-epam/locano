@@ -10,7 +10,7 @@ const GITHUB_APP_CLIENT_ID = process.env.GITHUB_APP_CLIENT_ID!;
 const GITHUB_APP_CLIENT_SECRET = process.env.GITHUB_APP_CLIENT_SECRET!;
 const GITHUB_PRIVATE_KEY_PATH = process.env.GITHUB_PRIVATE_KEY_PATH!;
 const DEFAULT_LOCALE = process.env.DEFAULT_LOCALE!;
-const TARGET_LOCALES = ['ru', 'ka', 'pl', 'ua', 'de', 'fr', 'es', 'it', 'pt', 'zh-CN', 'zh-TW', 'ja', 'ko'];
+const TARGET_LOCALES = ['ru', 'ka', 'pl', 'ua', 'de', 'fr', 'es', 'it', 'pt', 'zh-CN', 'ja', 'ko'];
 const LOCALES_FILE_PATH = process.env.LOCALES_FILE_PATH!;
 const LOCALE_FILE_EXTENSION = process.env.LOCALE_FILE_EXTENSION!;
 
@@ -144,6 +144,17 @@ async function handlePushEvent(payload: PushEvent): Promise<void> {
         sha: afterCommit,
       });
 
+      // Получаем список всех файлов в директории LOCALES_FILE_PATH
+      const { data: tree } = await octokit.git.getTree({
+        owner,
+        repo: repoName,
+        tree_sha: afterCommit,
+        recursive: 'true',
+      });
+      const existingLocaleFiles = tree.tree
+        .filter((item) => item.path?.startsWith(`${LOCALES_FILE_PATH}/`) && item.path.endsWith(`.${LOCALE_FILE_EXTENSION}`))
+        .map((item) => item.path);
+
       for (const locale of allLocales) {
         const targetLocaleFile = `${locale}.${LOCALE_FILE_EXTENSION}`;
         const targetPath = `${LOCALES_FILE_PATH}/${targetLocaleFile}`;
@@ -155,10 +166,11 @@ async function handlePushEvent(payload: PushEvent): Promise<void> {
             owner,
             repo: repoName,
             path: targetPath,
-            ref: afterCommit,
+            ref: branch, // Используем целевую ветку для актуального SHA
           });
           existingContent = Buffer.from((targetResponse.data as any).content, 'base64').toString();
-          sha = (targetResponse.data as any).sha; // Получаем SHA текущей версии
+          sha = (targetResponse.data as any).sha;
+          console.log(`Fetched SHA for ${targetPath} from ${branch}:`, sha);
         } catch (e: any) {
           if (e.status === 404) {
             console.log(`File ${targetPath} not found, creating new.`);
@@ -178,13 +190,21 @@ async function handlePushEvent(payload: PushEvent): Promise<void> {
         }
 
         const translations = generateTranslations(allKeys, afterJson);
-        const updatedJson = { ...targetJson, ...translations };
+        // Удаляем лишние ключи, которых нет в afterJson
+        const updatedJson = { ...targetJson };
+        Object.keys(updatedJson).forEach((key) => {
+          if (!allKeys.includes(key)) {
+            delete updatedJson[key];
+            console.log(`Removed obsolete key '${key}' from ${targetPath}`);
+          }
+        });
+        // Добавляем или обновляем существующие ключи
+        Object.assign(updatedJson, translations);
 
         // Улучшенная валидация и добавление новой строки
         let jsonString;
         try {
-          jsonString = JSON.stringify(updatedJson, null, 2) + '\n'; // Добавляем новую строку
-          // Проверка на наличие лишних запятых или некорректных символов
+          jsonString = JSON.stringify(updatedJson, null, 2) + '\n';
           if (jsonString.includes(',}') || jsonString.includes(',]')) {
             throw new Error('Invalid JSON structure detected (trailing commas)');
           }
@@ -209,6 +229,34 @@ async function handlePushEvent(payload: PushEvent): Promise<void> {
         console.log(`Updated ${targetPath} with all keys from ${defaultLocaleFile} in branch ${newBranchName}`);
         if (locale === DEFAULT_LOCALE) {
           console.log(`Confirmed update for default locale ${defaultLocaleFile}`);
+        }
+      }
+
+      // Удаляем файлы локалей, которые больше не нужны
+      const currentLocales = new Set(allLocales);
+      for (const filePath of existingLocaleFiles) {
+        const locale = filePath.replace(`${LOCALES_FILE_PATH}/`, '').replace(`.${LOCALE_FILE_EXTENSION}`, '');
+        if (!currentLocales.has(locale)) {
+          try {
+            const fileResponse = await octokit.repos.getContent({
+              owner,
+              repo: repoName,
+              path: filePath,
+              ref: branch,
+            });
+            const sha = (fileResponse.data as any).sha;
+            await octokit.repos.deleteFile({
+              owner,
+              repo: repoName,
+              path: filePath,
+              message: `Remove obsolete locale file \`${filePath}\``,
+              sha,
+              branch: newBranchName,
+            });
+            console.log(`Deleted obsolete file ${filePath} in branch ${newBranchName}`);
+          } catch (e: any) {
+            console.error(`Error deleting ${filePath}: ${e.message}`);
+          }
         }
       }
 
