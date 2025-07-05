@@ -3,7 +3,6 @@ import { APIGatewayEvent } from 'aws-lambda';
 import { createHmac, timingSafeEqual } from 'crypto';
 
 const sqs = new SQSClient({});
-const QUEUE_URL = process.env.SQS_QUEUE_URL!;
 
 export const handler = async (event: APIGatewayEvent) => {
   try {
@@ -25,7 +24,7 @@ export const handler = async (event: APIGatewayEvent) => {
 
     await sqs.send(
       new SendMessageCommand({
-        QueueUrl: QUEUE_URL,
+        QueueUrl: process.env.SQS_QUEUE_URL!,
         MessageBody: body,
         MessageAttributes: {
           event: {

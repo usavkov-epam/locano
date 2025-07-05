@@ -66,6 +66,7 @@ export class LocanoCdkStack extends cdk.Stack {
         runtime: lambda.Runtime.NODEJS_LATEST,
         role: ghWebhookLambdaRole,
         environment: {
+          GITHUB_WEBHOOK_SECRET: process.env.GITHUB_WEBHOOK_SECRET!,
           QUEUE_URL: webhookQueue.queueUrl,
         },
         bundling: {
