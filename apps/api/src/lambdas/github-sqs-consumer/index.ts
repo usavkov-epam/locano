@@ -123,7 +123,7 @@ async function handlePushEvent(payload: PushEvent): Promise<void> {
       beforeJson = JSON.parse(beforeData);
       afterJson = JSON.parse(afterData);
     } catch (e) {
-      console.error(`File ${defaultLocaleFile} is not valid JSON: ${e.message}`);
+      console.error(`File ${defaultLocaleFile} is not valid JSON: ${e}`);
       return;
     }
 
@@ -173,7 +173,7 @@ async function handlePushEvent(payload: PushEvent): Promise<void> {
         try {
           targetJson = JSON.parse(existingContent);
         } catch (e) {
-          console.error(`File ${targetPath} is not valid JSON, using empty object: ${e.message}`);
+          console.error(`File ${targetPath} is not valid JSON, using empty object: ${e}`);
           targetJson = {};
         }
 
@@ -189,7 +189,7 @@ async function handlePushEvent(payload: PushEvent): Promise<void> {
             throw new Error('Invalid JSON structure detected (trailing commas)');
           }
         } catch (e) {
-          console.error(`Invalid JSON for ${targetPath}: ${e.message}`, { updatedJson });
+          console.error(`Invalid JSON for ${targetPath}: ${e}`, { updatedJson });
           continue;
         }
 

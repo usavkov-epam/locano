@@ -40,7 +40,7 @@ export const handler = async (event: APIGatewayEvent) => {
      */
     if (
       !parsedBody?.head_commit?.modified?.includes(process.env.DEFAULT_LOCALE_FILE_PATH!) ||
-      !['push', 'pull_request'].includes(eventType)
+      !['push'].includes(eventType)
     ) {
       return {
         statusCode: 100,
