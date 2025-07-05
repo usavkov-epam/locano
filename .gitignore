@@ -40,3 +40,5 @@ npm-debug.log*
 .terraform
 infrastructure/terraform/lambdas
 .temp
+
+.secrets
