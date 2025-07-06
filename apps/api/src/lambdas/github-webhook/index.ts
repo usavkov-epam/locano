@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
 import type { WebhookEvent } from '@octokit/webhooks-types';
 import { APIGatewayEvent } from 'aws-lambda';
@@ -62,7 +64,7 @@ export const handler = async (event: APIGatewayEvent) => {
 
     const messageBody = {
       ...parsedBody,
-    }
+    };
 
     await sqs.send(
       new SendMessageCommand({
@@ -86,7 +88,7 @@ export const handler = async (event: APIGatewayEvent) => {
 
     return {
       statusCode: 500,
-      body: 'Internal Server Error',
+      body: '[LWH] Internal Server Error',
     };
   }
 };

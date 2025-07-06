@@ -13,6 +13,6 @@ export class AppController {
 
   @Post('webhook')
   webhook(@Body() body): void {
-    console.log(body)
+    console.log(body);
   }
 }
