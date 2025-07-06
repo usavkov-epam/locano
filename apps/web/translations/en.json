@@ -76,9 +76,7 @@
     "action": "Change Language",
     "locale": {
       "en": "English",
-      "ru": "Русский",
-      "ka": "ქართული",
-      "de": "Deutsch"
+      "ru": "Русский"
     }
   }
 }
