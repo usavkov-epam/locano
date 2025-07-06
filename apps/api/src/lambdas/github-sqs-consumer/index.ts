@@ -15,7 +15,7 @@ const GITHUB_APP_CLIENT_ID = process.env.GITHUB_APP_CLIENT_ID!;
 const GITHUB_APP_CLIENT_SECRET = process.env.GITHUB_APP_CLIENT_SECRET!;
 const GITHUB_PRIVATE_KEY_PATH = process.env.GITHUB_PRIVATE_KEY_PATH!;
 const DEFAULT_LOCALE = process.env.DEFAULT_LOCALE!;
-const TARGET_LOCALES = ['ru', 'ka', 'ua', 'de', 'fr'];
+const TARGET_LOCALES = ['ru', 'ka', 'de', 'fr', 'es'];
 const LOCALES_FILE_PATH = process.env.LOCALES_FILE_PATH!;
 const LOCALE_FILE_EXTENSION = process.env.LOCALE_FILE_EXTENSION!;
 
