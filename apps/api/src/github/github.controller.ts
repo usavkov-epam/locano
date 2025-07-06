@@ -24,6 +24,16 @@ export class GithubController {
     @Headers('x-github-event') event: string,
     @Body() payload: any
   ) {
+    const branch = payload?.ref?.replace('refs/heads/', '');
+
+    if (branch !== process.env.GITHUB_TARGET_BRANCH) {
+      return {
+        status: 'ignored',
+        event,
+        message: `Skipping event from non-target branch ${branch}, target is ${process.env.GITHUB_TARGET_BRANCH}`,
+      };
+    }
+
     if (event === 'push') {
       const message: SQSEvent = {
         Records: [

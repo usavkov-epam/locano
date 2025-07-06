@@ -68,6 +68,9 @@ importers:
       axios:
         specifier: ^1.10.0
         version: 1.10.0
+      chalk:
+        specifier: ^4
+        version: 4.1.2
       fast-json-patch:
         specifier: ^3.1.1
         version: 3.1.1

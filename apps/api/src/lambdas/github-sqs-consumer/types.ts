@@ -1,3 +1,4 @@
+/** @type {import("@octokit/rest")} */
 const { Octokit } = require('@octokit/rest');
 
 export interface GitHubConfig {
@@ -28,11 +29,10 @@ export interface SyncContext {
   newBranchName: string;
   defaultLocaleFile: string;
   allKeys: string[];
-  afterJson: Record<string, any>; // Пока оставим any для значений, можно уточнить позже
+  afterJson: Record<string, unknown>; // Уточнить тип позже
   existingLocaleFiles: string[];
   locales: string[];
   localesFilePath: string;
   localeFileExtension: string;
-  installationId: number;
-  octokit: typeof Octokit;
+  gitHubConfig: GitHubConfig; // Передаём конфигурацию вместо octokit
 }

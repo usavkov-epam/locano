@@ -5,6 +5,8 @@ import type { WebhookEvent } from '@octokit/webhooks-types';
 import { APIGatewayEvent } from 'aws-lambda';
 import { createHmac, timingSafeEqual } from 'crypto';
 
+const GITHUB_TARGET_BRANCH = process.env.GITHUB_TARGET_BRANCH!;
+
 const sqs = new SQSClient({});
 
 export const handler = async (event: APIGatewayEvent) => {
@@ -20,19 +22,19 @@ export const handler = async (event: APIGatewayEvent) => {
 
     const parsedBody = JSON.parse(body);
     const eventType = event.headers['x-github-event'] || event.headers['X-GitHub-Event'] || 'unknown';
+    const branch = parsedBody.ref.replace('refs/heads/', '');
 
     /*
-      Verify the signature of the incoming webhook event.
-      If the signature verification fails, we return a 401 status code
-      indicating that the request is unauthorized. 
+      Check if the branch of the event matches the target branch.
+      If it does not match, we return a 100 status code indicating that
+      the event does not require handling. 
      */
-    if (!verifySignature(event)) {
+    if (branch !== GITHUB_TARGET_BRANCH) {
       return {
-        statusCode: 401,
-        body: 'Signature verification failed',
-      };
-    };
-
+        statusCode: 100,
+        body: `Skipping event from non-target branch ${branch}, target is ${GITHUB_TARGET_BRANCH}`,
+      }
+    }
 
     /*
       Check if the event type is either "push" or "pull_request" and if the
@@ -61,6 +63,18 @@ export const handler = async (event: APIGatewayEvent) => {
         body: 'Could not resolve installation ID',
       };
     }
+
+    /*
+      Verify the signature of the incoming webhook event.
+      If the signature verification fails, we return a 401 status code
+      indicating that the request is unauthorized. 
+     */
+    if (!verifySignature(event)) {
+      return {
+        statusCode: 401,
+        body: 'Signature verification failed',
+      };
+    };
 
     const messageBody = {
       ...parsedBody,
